@@ -4,9 +4,16 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select
 import time
+import sys
 
-account_id = "1543310976"
-base_url = "https://eu1.dashboard.clevertap.com/W67-774-7Z5Z/account/internal/access.html?tempAccountId="
+account_id = input("Enter 12 Character Account ID: ")
+if len(account_id) != 12 or account_id[3] != '-' or account_id[7] != '-' :
+    sys.exit("Invalid Account Id Entered")
+region =  input("Enter Region (eu/in/sg/us/sk): ")
+if region != "eu" and region != "in" and region != "sg" and region != "us" and region != "sk" :
+    sys.exit("Invalid Region Entered")
+region = region + "1"  
+base_url = "https://" + region + ".dashboard.clevertap.com/W67-774-7Z5Z/account/internal/access.html?tempAccountId="
 url = base_url + account_id
 
 # declare and initialize driver variable
@@ -44,7 +51,7 @@ try:
     
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, '/html/body/div[6]/div[3]/div/div/div[5]/div[1]/div[2]/input'))).click()
     #total_profiles = WebDriverWait(driver, 10).until(EC.element_to_be_selected((By.XPATH, '/html/body/div[6]/div[3]/div/div/div[8]/div[1]/div[3]/div[3]/div[1]/div[2]'))).text
-    time.sleep(5)
+    time.sleep(10)
     total_profiles = driver.find_element_by_xpath('/html/body/div[6]/div[3]/div/div/div[8]/div[1]/div[3]/div[3]/div[1]/div[2]').text
     print("Size of all users segment: " + total_profiles)
     web_push_no = driver.find_element_by_xpath('/html/body/div[6]/div[3]/div/div/div[8]/div[1]/div[3]/div[3]/div[2]/div/div[1]/div[2]').text
