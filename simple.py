@@ -4,6 +4,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.keys import Keys
 import time
 import sys
 import os
@@ -63,51 +64,51 @@ try:
     element = WebDriverWait(driver, 120).until(
         EC.title_contains('Find People')
     )
-    # datatable = {}
-    # WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, '/html/body/div[6]/div[3]/div/div/div[5]/div[1]/div[2]/input'))).click()
-    # #WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, '/html/body/div[6]/div[3]/div/div/div[8]/div[1]/div[3]/div[3]/div[1]/div[2]')))
-    # time.sleep(10)
-    # total_profiles = driver.find_element_by_xpath('/html/body/div[6]/div[3]/div/div/div[8]/div[1]/div[3]/div[3]/div[1]/div[2]').text
-    # print("Size of all users segment: " + total_profiles)
-    # datatable["Total Profiles"] = total_profiles
-    # web_push_no = driver.find_element_by_xpath('/html/body/div[6]/div[3]/div/div/div[8]/div[1]/div[3]/div[3]/div[2]/div/div[1]/div[2]').text
-    # web_push_perc = driver.find_element_by_xpath('/html/body/div[6]/div[3]/div/div/div[8]/div[1]/div[3]/div[3]/div[2]/div/div[1]/div[3]').text
-    # print("Web Push reachable profiles: " + web_push_no + "(" + web_push_perc + ")")
-    # datatable["Web Push Reachable Profiles"] = web_push_no
+    datatable = {}
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, '/html/body/div[6]/div[3]/div/div/div[5]/div[1]/div[2]/input'))).click()
+    time.sleep(10)
+    total_profiles = driver.find_element_by_xpath('/html/body/div[6]/div[3]/div/div/div[8]/div[1]/div[3]/div[3]/div[1]/div[2]').text
+    print("Size of all users segment: " + total_profiles)
+    datatable["Total Profiles"] = total_profiles
+    web_push_no = driver.find_element_by_xpath('/html/body/div[6]/div[3]/div/div/div[8]/div[1]/div[3]/div[3]/div[2]/div/div[1]/div[2]').text
+    web_push_perc = driver.find_element_by_xpath('/html/body/div[6]/div[3]/div/div/div[8]/div[1]/div[3]/div[3]/div[2]/div/div[1]/div[3]').text
+    print("Web Push reachable profiles: " + web_push_no + "(" + web_push_perc + ")")
+    datatable["Web Push Reachable Profiles"] = web_push_no
 
-    # mobile_push_no = driver.find_element_by_xpath('/html/body/div[6]/div[3]/div/div/div[8]/div[1]/div[3]/div[3]/div[2]/div/div[2]/div[2]').text
-    # mobile_push_perc = driver.find_element_by_xpath('/html/body/div[6]/div[3]/div/div/div[8]/div[1]/div[3]/div[3]/div[2]/div/div[2]/div[3]').text
-    # print("Mobile Push reachable profiles: " + mobile_push_no + "(" + mobile_push_perc + ")")
-    # datatable["Mobile Push Reachable Profiles"] = mobile_push_no
+    mobile_push_no = driver.find_element_by_xpath('/html/body/div[6]/div[3]/div/div/div[8]/div[1]/div[3]/div[3]/div[2]/div/div[2]/div[2]').text
+    mobile_push_perc = driver.find_element_by_xpath('/html/body/div[6]/div[3]/div/div/div[8]/div[1]/div[3]/div[3]/div[2]/div/div[2]/div[3]').text
+    print("Mobile Push reachable profiles: " + mobile_push_no + "(" + mobile_push_perc + ")")
+    datatable["Mobile Push Reachable Profiles"] = mobile_push_no
 
-    # sms_push_no = driver.find_element_by_xpath('/html/body/div[6]/div[3]/div/div/div[8]/div[1]/div[3]/div[3]/div[2]/div/div[3]/div[2]').text
-    # sms_push_perc = driver.find_element_by_xpath('/html/body/div[6]/div[3]/div/div/div[8]/div[1]/div[3]/div[3]/div[2]/div/div[3]/div[3]').text
-    # print("SMS reachable profiles: " + sms_push_no + "(" + sms_push_perc + ")")
-    # datatable["SMS Reachable Profiles"] = sms_push_no
+    sms_push_no = driver.find_element_by_xpath('/html/body/div[6]/div[3]/div/div/div[8]/div[1]/div[3]/div[3]/div[2]/div/div[3]/div[2]').text
+    sms_push_perc = driver.find_element_by_xpath('/html/body/div[6]/div[3]/div/div/div[8]/div[1]/div[3]/div[3]/div[2]/div/div[3]/div[3]').text
+    print("SMS reachable profiles: " + sms_push_no + "(" + sms_push_perc + ")")
+    datatable["SMS Reachable Profiles"] = sms_push_no
 
-    # email_push_no = driver.find_element_by_xpath('/html/body/div[6]/div[3]/div/div/div[8]/div[1]/div[3]/div[3]/div[2]/div/div[4]/div[2]').text
-    # email_push_perc = driver.find_element_by_xpath('/html/body/div[6]/div[3]/div/div/div[8]/div[1]/div[3]/div[3]/div[2]/div/div[4]/div[3]').text
-    # print("Email reachable profiles: " + email_push_no + "(" + email_push_perc + ")")
-    # datatable["Email Reachable Profiles"] = email_push_no
+    email_push_no = driver.find_element_by_xpath('/html/body/div[6]/div[3]/div/div/div[8]/div[1]/div[3]/div[3]/div[2]/div/div[4]/div[2]').text
+    email_push_perc = driver.find_element_by_xpath('/html/body/div[6]/div[3]/div/div/div[8]/div[1]/div[3]/div[3]/div[2]/div/div[4]/div[3]').text
+    print("Email reachable profiles: " + email_push_no + "(" + email_push_perc + ")")
+    datatable["Email Reachable Profiles"] = email_push_no
 
-    # wa_push_no = driver.find_element_by_xpath('/html/body/div[6]/div[3]/div/div/div[8]/div[1]/div[3]/div[3]/div[2]/div/div[5]/div[2]').text
-    # wa_push_perc = driver.find_element_by_xpath('/html/body/div[6]/div[3]/div/div/div[8]/div[1]/div[3]/div[3]/div[2]/div/div[5]/div[3]').text
-    # print("WhatsApp reachable profiles: " + wa_push_no + "(" + wa_push_perc + ")")
-    # datatable["WhatsApp Reachable Profiles"] = wa_push_no
+    wa_push_no = driver.find_element_by_xpath('/html/body/div[6]/div[3]/div/div/div[8]/div[1]/div[3]/div[3]/div[2]/div/div[5]/div[2]').text
+    wa_push_perc = driver.find_element_by_xpath('/html/body/div[6]/div[3]/div/div/div[8]/div[1]/div[3]/div[3]/div[2]/div/div[5]/div[3]').text
+    print("WhatsApp reachable profiles: " + wa_push_no + "(" + wa_push_perc + ")")
+    datatable["WhatsApp Reachable Profiles"] = wa_push_no
 
-    # aud_push_no = driver.find_element_by_xpath('/html/body/div[6]/div[3]/div/div/div[8]/div[1]/div[3]/div[3]/div[2]/div/div[6]/div[2]').text
-    # aud_push_perc = driver.find_element_by_xpath('/html/body/div[6]/div[3]/div/div/div[8]/div[1]/div[3]/div[3]/div[2]/div/div[6]/div[3]').text
-    # print("Audiences reachable profiles: " + aud_push_no + "(" + aud_push_perc + ")")
-    # datatable["Audiences Push Reachable Profiles"] = aud_push_no
+    aud_push_no = driver.find_element_by_xpath('/html/body/div[6]/div[3]/div/div/div[8]/div[1]/div[3]/div[3]/div[2]/div/div[6]/div[2]').text
+    aud_push_perc = driver.find_element_by_xpath('/html/body/div[6]/div[3]/div/div/div[8]/div[1]/div[3]/div[3]/div[2]/div/div[6]/div[3]').text
+    print("Audiences reachable profiles: " + aud_push_no + "(" + aud_push_perc + ")")
+    datatable["Audiences Push Reachable Profiles"] = aud_push_no
 
+    driver.find_element_by_tag_name('html').send_keys(Keys.PAGE_UP)
     did_event_xpath = "/html/body/div[6]/div[3]/div/div/div[5]/div[1]/div[1]/div[2]/div[2]/div/div[1]/div[4]/div[2]/div/button"
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, did_event_xpath))).click()
-
     date_range_xpath = "/html/body/div[6]/div[3]/div/div/div[5]/div[1]/div[1]/div[2]/div[2]/div/div[1]/div[4]/ul/li/div[2]/div/div/div[1]/div[2]/span/div/div/span/div[1]"
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,date_range_xpath))).click()
     time.sleep(3)
     last_x_days_path = "/html/body/div[6]/div[3]/div/div/div[5]/div[1]/div[1]/div[2]/div[2]/div/div[1]/div[4]/ul/li/div[2]/div/div/div[1]/div[2]/span/div/div/span/div[3]/div[3]/div[1]/div/div[3]/div/div/a/div"
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,last_x_days_path))).click()
+    time.sleep(3)
     last_7_days_path = "/html/body/div[6]/div[3]/div/div/div[5]/div[1]/div[1]/div[2]/div[2]/div/div[1]/div[4]/ul/li/div[2]/div/div/div[1]/div[2]/span/div/div/span/div[3]/div[3]/div[1]/div/div[3]/div/div/div/ul/li[7]"
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH,last_7_days_path))).click()
     apply_7_days_path = "/html/body/div[6]/div[3]/div/div/div[5]/div[1]/div[1]/div[2]/div[2]/div/div[1]/div[4]/ul/li/div[2]/div/div/div[1]/div[2]/span/div/div/span/div[3]/div[4]/button[2]"
@@ -123,7 +124,32 @@ try:
     view_details_xpath = "/html/body/div[6]/div[3]/div/div/div[5]/div[1]/div[2]/input"
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, view_details_xpath))).click()
 
-    input("Press any key to Exit: ")
+    time.sleep(10)
+    id_err_profiles = driver.find_element_by_xpath('/html/body/div[6]/div[3]/div/div/div[8]/div[1]/div[3]/div[3]/div[1]/div[2]').text
+    print("Size of Identity Error profiles: " + id_err_profiles)
+    datatable["Identity Error Profiles"] = id_err_profiles
+
+    event_select_xpath = "/html/body/div[6]/div[3]/div/div/div[5]/div[1]/div[1]/div[2]/div[2]/div/div[1]/div[4]/ul/li/div[2]/div/div/div[1]/div[1]/div/div/a/div"
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, event_select_xpath))).click()
+    time.sleep(3)
+    id_set_event_xpath = "/html/body/div[6]/div[3]/div/div/div[5]/div[1]/div[1]/div[2]/div[2]/div/div[1]/div[4]/ul/li/div[2]/div/div/div[1]/div[1]/div/div/div/ul/li[15]"
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, id_set_event_xpath))).click()
+
+    filter_by_elem_xpath = "/html/body/div[6]/div[3]/div/div/div[5]/div[1]/div[1]/div[2]/div[2]/div/div[1]/div[4]/ul/li/div[2]/div/div/div[2]/a"
+    driver.find_element_by_xpath(filter_by_elem_xpath).click()
+
+    prop_val_input_xpath = "/html/body/div[6]/div[3]/div/div/div[5]/div[1]/div[1]/div[2]/div[2]/div/div[1]/div[4]/ul/li/div[2]/div/div/div[3]/div[1]/div/span[2]/div[3]/div/input"
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, prop_val_input_xpath))).send_keys('true,')
+
+    view_details_xpath = "/html/body/div[6]/div[3]/div/div/div[5]/div[1]/div[2]/input"
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, view_details_xpath))).click()
+
+    time.sleep(10)
+    id_set_profiles = driver.find_element_by_xpath('/html/body/div[6]/div[3]/div/div/div[8]/div[1]/div[3]/div[3]/div[1]/div[2]').text
+    print("Size of Blacklisted profiles: " + id_set_profiles)
+    datatable["Blacklisted Profiles"] = id_set_profiles
+
+    #input("Press any key to Exit: ")
     #last_x_days_input_path = "/html/body/div[6]/div[3]/div/div/div[5]/div[1]/div[1]/div[2]/div[2]/div/div[1]/div[4]/ul/li/div[2]/div/div/div[1]/div[2]/span/div/div/span/div[3]/div[3]/div[1]/div/div[3]/div/div/div/div/input"
     #days_input_elem = 
     #driver.find_element_by_xpath(last_x_days_input_path).click()
