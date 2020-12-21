@@ -29,23 +29,14 @@ region = region + "1"
 base_url = "https://" + region + ".dashboard.clevertap.com/"+ demo_acc_id +"/account/internal/access.html?tempAccountId="
 url = base_url + account_id
 
-# declare and initialize driver variable
 path = os.getcwd() + "/chromedriver"
 chrome_options = Options()
-chrome_options.add_argument("user-data-dir=~/Library/Application Support/Google/Chrome")
+chrome_options.add_argument("user-data-dir=~/Library/Application\ Support/Google/Chrome")
 driver=webdriver.Chrome(executable_path=path, options=chrome_options)
-# browser should be loaded in maximized window
-#driver.maximize_window()
-# driver should wait implicitly for a given duration, for the element under consideration to load.
-# to enforce this setting we will use builtin implicitly_wait() function of our 'driver' object.
-# to load a given URL in browser window
+
+driver.maximize_window()
+
 driver.get(url)
-#WebDriverWait(driver,120).until(driver.title.__contains__('Today'))
-#while driver.title.__contains__('Today') >= 0:
-  #  pass
-#driver.save_screenshot("today.png")
-# to close the browser
-#driver.close()
 
 try:
     element = WebDriverWait(driver, 120).until(
@@ -100,7 +91,6 @@ try:
     print("Audiences reachable profiles: " + aud_push_no + "(" + aud_push_perc + ")")
     datatable["Audiences Push Reachable Profiles"] = aud_push_no
 
-    driver.find_element_by_tag_name('html').send_keys(Keys.PAGE_UP)
     did_event_xpath = "/html/body/div[6]/div[3]/div/div/div[5]/div[1]/div[1]/div[2]/div[2]/div/div[1]/div[4]/div[2]/div/button"
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, did_event_xpath))).click()
     date_range_xpath = "/html/body/div[6]/div[3]/div/div/div[5]/div[1]/div[1]/div[2]/div[2]/div/div[1]/div[4]/ul/li/div[2]/div/div/div[1]/div[2]/span/div/div/span/div[1]"
@@ -149,12 +139,111 @@ try:
     print("Size of Blacklisted profiles: " + id_set_profiles)
     datatable["Blacklisted Profiles"] = id_set_profiles
 
-    #input("Press any key to Exit: ")
-    #last_x_days_input_path = "/html/body/div[6]/div[3]/div/div/div[5]/div[1]/div[1]/div[2]/div[2]/div/div[1]/div[4]/ul/li/div[2]/div/div/div[1]/div[2]/span/div/div/span/div[3]/div[3]/div[1]/div/div[3]/div/div/div/div/input"
-    #days_input_elem = 
-    #driver.find_element_by_xpath(last_x_days_input_path).click()
-    #days_input_elem.send_keys("7")
+    fe_url = driver.current_url.replace("people","event")
+    driver.get(fe_url)
 
+    ev_last_30_days_xpath = "/html/body/div[6]/div[3]/div/div/div[6]/div[2]/div[1]"
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, ev_last_30_days_xpath))).click()
+    time.sleep(2)
+    ev_last_7_days_xpath = "/html/body/div[6]/div[3]/div/div/div[6]/div[2]/div[2]/div[1]/ul/li[2]"
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, ev_last_7_days_xpath))).click()
+    
+    event_area_xpath = "/html/body/div[6]/div[3]/div/div/div[9]/div[1]/div[2]/div/div[2]/div/div/div/div/div/div[1]/div/div/div"
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, event_area_xpath))).click()
+    time.sleep(2)
+    for element in driver.find_elements_by_tag_name("li"):
+        if element.text == "App Launched" and element.is_displayed():
+            element.click()
+            break
+    time.sleep(5)
+    evt_number_xpath = "/html/body/div[6]/div[3]/div/div/div[9]/div[2]/div[1]/div[3]/div/div[1]"
+    app_launched_count = driver.find_element_by_xpath(evt_number_xpath).text
+
+    print("App Launched Count: " + app_launched_count)
+    datatable["App Launched"] = app_launched_count
+
+    event_area_xpath = "/html/body/div[6]/div[3]/div/div/div[9]/div[1]/div[2]/div/div[2]/div/div/div/div/div/div[1]/div/div/div"
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, event_area_xpath))).click()
+    time.sleep(2)
+    for element in driver.find_elements_by_tag_name("li"):
+        if element.text == "App Uninstalled" and element.is_displayed():
+            element.click()
+            break
+
+    time.sleep(5)
+    evt_number_xpath = "/html/body/div[6]/div[3]/div/div/div[9]/div[2]/div[1]/div[3]/div/div[1]"
+    app_uninstalled_count = driver.find_element_by_xpath(evt_number_xpath).text
+
+    print("App Uninstalled Count: " + app_uninstalled_count)
+    datatable["App Uninstalled"] = app_uninstalled_count
+
+    event_area_xpath = "/html/body/div[6]/div[3]/div/div/div[9]/div[1]/div[2]/div/div[2]/div/div/div/div/div/div[1]/div/div/div"
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, event_area_xpath))).click()
+    time.sleep(2)
+    for element in driver.find_elements_by_tag_name("li"):
+        if element.text == "Notification Sent" and element.is_displayed():
+            element.click()
+            break
+
+    time.sleep(5)
+    evt_number_xpath = "/html/body/div[6]/div[3]/div/div/div[9]/div[2]/div[1]/div[3]/div/div[1]"
+    notif_sent_count = driver.find_element_by_xpath(evt_number_xpath).text
+
+    print("Notification Sent Count: " + notif_sent_count)
+    datatable["Notification Sent"] = notif_sent_count
+    
+    event_area_xpath = "/html/body/div[6]/div[3]/div/div/div[9]/div[1]/div[2]/div/div[2]/div/div/div/div/div/div[1]/div/div/div"
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, event_area_xpath))).click()
+    time.sleep(2)
+    for element in driver.find_elements_by_tag_name("li"):
+        if element.text == "Notification Clicked" and element.is_displayed():
+            element.click()
+            break
+
+    time.sleep(5)
+    evt_number_xpath = "/html/body/div[6]/div[3]/div/div/div[9]/div[2]/div[1]/div[3]/div/div[1]"
+    notif_clicked_count = driver.find_element_by_xpath(evt_number_xpath).text
+
+    print("Notification Clicked Count: " + notif_clicked_count)
+    datatable["Notification Clicked"] = notif_clicked_count
+
+    event_area_xpath = "/html/body/div[6]/div[3]/div/div/div[9]/div[1]/div[2]/div/div[2]/div/div/div/div/div/div[1]/div/div/div"
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, event_area_xpath))).click()
+    time.sleep(2)
+    for element in driver.find_elements_by_tag_name("li"):
+        if element.text == "Push Impressions" and element.is_displayed():
+            element.click()
+            break
+
+    time.sleep(5)
+    evt_number_xpath = "/html/body/div[6]/div[3]/div/div/div[9]/div[2]/div[1]/div[3]/div/div[1]"
+    push_impression_count = driver.find_element_by_xpath(evt_number_xpath).text
+
+    print("Push Impressions Count: " + push_impression_count)
+    datatable["Push Impressions"] = push_impression_count
+
+    charged_event_name = input("Enter conversion event: ")
+
+    event_area_xpath = "/html/body/div[6]/div[3]/div/div/div[9]/div[1]/div[2]/div/div[2]/div/div/div/div/div/div[1]/div/div/div"
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, event_area_xpath))).click()
+    time.sleep(2)
+    event_found = False
+    for element in driver.find_elements_by_tag_name("li"):
+        if element.text == charged_event_name:
+            element.click()
+            event_found = True
+            break
+    
+    if event_found == False:
+        charged_event_name = "Charged"
+        print("Conversion event entered not found, using Charged")
+
+    time.sleep(5)
+    evt_number_xpath = "/html/body/div[6]/div[3]/div/div/div[9]/div[2]/div[1]/div[3]/div/div[1]"
+    charged_event_count = driver.find_element_by_xpath(evt_number_xpath).text
+
+    print(charged_event_name + " Count: " + charged_event_count)
+    datatable[charged_event_name] = charged_event_count
 finally:
     driver.quit()
 
