@@ -8,6 +8,9 @@ from selenium.webdriver.common.keys import Keys
 import time
 import sys
 import os
+import datetime
+import gspread   
+import json
 
 regions = ["eu","in","sg","us","sk"]
 account_id = ""
@@ -48,7 +51,11 @@ url = base_url + account_id
 
 path = os.getcwd() + "/chromedriver"
 chrome_options = Options()
-chrome_options.add_argument("user-data-dir=/Users/vijay.agnihotri/Library/Application Support/Google/Chrome")
+usr = os.getcwd().split("/")[2]
+user_data_dir = "."
+if usr != "":
+    user_data_dir = "/Users/" + usr + "/Library/Application Support/Google/Chrome"
+chrome_options.add_argument("user-data-dir=" + user_data_dir)
 driver=webdriver.Chrome(executable_path=path, options=chrome_options)
 
 driver.maximize_window()
@@ -73,7 +80,10 @@ try:
         EC.title_contains('Find People')
     )
     datatable = {}
-    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, '/html/body/div[6]/div[3]/div/div/div[5]/div[1]/div[2]/input'))).click()
+    timestamp = datetime.datetime.now()
+    datatable["Time"] = timestamp.strftime("%x") + " " + timestamp.strftime("%X")
+
+    WebDriverWait(driver, 25).until(EC.element_to_be_clickable((By.XPATH, '/html/body/div[6]/div[3]/div/div/div[5]/div[1]/div[2]/input'))).click()
     time.sleep(10)
     total_profiles = driver.find_element_by_xpath('/html/body/div[6]/div[3]/div/div/div[8]/div[1]/div[3]/div[3]/div[1]/div[2]').text
     print("Size of all users segment: " + total_profiles)
@@ -265,7 +275,31 @@ try:
 
     print(charged_event_name + " Count: " + charged_event_count)
     datatable[charged_event_name] = charged_event_count
+    
+    gc = gspread.service_account(filename=os.getcwd() + "/automation-1608644218205-e292924471e1.json")
+    sheet = gc.open_by_key("1lQN9ZKsn1Pa1VH_TCf21ie_GK4zHTc18sPvgG2zkbIM")
+    worksheet_found = False
+    acc_worksheet = sheet.get_worksheet(0)
+    print("Adding data into Google Sheet")
 
-    print(datatable)
+    for worksheet in sheet.worksheets():
+        if worksheet.title == account_id:
+            worksheet_found = True
+            acc_worksheet = worksheet
+            row = acc_worksheet.row_count + 1
+            acc_worksheet.add_rows(1)
+            index = 1
+            for key in datatable.keys():
+                acc_worksheet.update_cell(row, index, datatable[key])
+                index += 1
+
+    if worksheet_found == False:
+        acc_worksheet = sheet.add_worksheet(title=account_id, rows="2", cols="100")
+        index = 1
+        for key in datatable.keys():
+            acc_worksheet.update_cell(1, index, key)
+            acc_worksheet.update_cell(2, index, datatable[key])
+            index += 1
+    print ("1 row successfully inserted")
 finally:
     driver.quit()
