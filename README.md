@@ -15,10 +15,9 @@ It queries the following account metrics from the past 7 days sequentially and t
 
 # Usage 
 Please exit Google Chrome Browser<br><br>
-
 **Using source code** <br>
 (After installing pip3, selenium and gspread) - <br>
-`python3 script.py -a 989-WZK-K45Z -r eu -e 'Subscribed' -s <Google Spreadsheet ID>`<br>
+`python3 script.py -a 989-WZK-K45Z -r eu -e 'Subscribed' -s <Google Spreadsheet ID>`<br><br>
 **Using the bundled executable (Mac OS only)** <br>
 (Make sure the kam_script and chromedriver executables are in the same directory) <br>
 `./kam_script -a 989-WZK-K45Z -r eu -e 'Subscribed' -s <Google Spreadsheet ID>` <br>
@@ -27,6 +26,6 @@ Where a 12 character Account Id, Account Region, Key Event and Google Spreadshee
 If the Key Event entered isn't found, Charged is used by default
 
 # Requirements:
-1. Access to accounts
+1. Access to accounts is required
 2. Have to log in using MFA the first time the script is used in a session
-3. Google Sheet access - open your Google Sheet and give Editor access to automation@automation-1608644218205.iam.gserviceaccount.com (If building from source, please edit line #280 with your id)
+3. Google Sheet access - open your Google Sheet and give Editor access to automation@automation-1608644218205.iam.gserviceaccount.com 
