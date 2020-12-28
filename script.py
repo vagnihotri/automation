@@ -16,22 +16,33 @@ regions = ["eu","in","sg","us","sk"]
 account_id = ""
 region = ""
 charged_event_name = ""
+sheet_id = ""
 
-if len(sys.argv) != 7:
-    sys.exit("Arguments Entry Invalid. Sample usage: python3 simple.py -a ZWW-WWW-WWWZ -r eu -e 'ABC CDF'")
-if sys.argv[1] == "-a":
-    account_id = sys.argv[2]
-else:
-    sys.exit("Arguments Entry Invalid. Sample usage: python3 simple.py -a ZWW-WWW-WWWZ -r eu -e 'ABC CDF'")
-if sys.argv[3] == "-r":
-    region = sys.argv[4]
-else:
-    sys.exit("Arguments Entry Invalid. Sample usage: python3 simple.py -a ZWW-WWW-WWWZ -r eu -e 'ABC CDF'")
-if sys.argv[5] == "-e":
-    charged_event_name = sys.argv[6]
-else:
-    sys.exit("Arguments Entry Invalid. Sample usage: python3 simple.py -a ZWW-WWW-WWWZ -r eu -e 'ABC CDF'")
+if len(sys.argv) != 9:
+    sys.exit("Arguments Entry Invalid. Sample usage: python3 simple.py -a ZWW-WWW-WWWZ -r eu -e 'ABC CDF' -s <Google Spreadsheet ID>")
 
+arg_index = 0
+account_id_found = False
+region_found = False
+special_event_found = False
+sheet_id_found = False
+while arg_index < len(sys.argv):
+    if sys.argv[arg_index] == "-a" and (arg_index+1) != len(sys.argv):
+        account_id = sys.argv[arg_index+1]
+        account_id_found = True
+    if sys.argv[arg_index] == "-r" and (arg_index+1) != len(sys.argv):
+        region = sys.argv[arg_index+1]
+        region_found = True
+    if sys.argv[arg_index] == "-e" and (arg_index+1) != len(sys.argv):
+        charged_event_name = sys.argv[arg_index+1]
+        special_event_found = True
+    if sys.argv[arg_index] == "-s" and (arg_index+1) != len(sys.argv):
+        sheet_id = sys.argv[arg_index+1]
+        sheet_id_found = True
+    arg_index += 1
+
+if(account_id_found == False or region_found == False or special_event_found == False or sheet_id_found == False):
+    sys.exit("Arguments Entry Invalid. Sample usage: python3 simple.py -a ZWW-WWW-WWWZ -r eu -e 'ABC CDF' -s <Google Spreadsheet ID>")
 
 if len(account_id) != 12 or account_id[3] != '-' or account_id[7] != '-' :
     sys.exit("Invalid Account Id Entered")
@@ -172,6 +183,11 @@ try:
     ev_last_30_days_xpath = "/html/body/div[6]/div[3]/div/div/div[6]/div[2]/div[1]"
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, ev_last_30_days_xpath))).click()
     time.sleep(2)
+    cal_text_xpath = "/html/body/div[6]/div[3]/div/div/div[6]/div[2]/div[1]/span"
+    cal_text = driver.find_element_by_xpath(cal_text_xpath).text
+    if "Between" in cal_text:
+        back_icon_xpath = "/html/body/div[6]/div[3]/div/div/div[6]/div[2]/div[3]/div[1]/img"
+        WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, back_icon_xpath))).click()
     ev_last_7_days_xpath = "/html/body/div[6]/div[3]/div/div/div[6]/div[2]/div[2]/div[1]/ul/li[2]"
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, ev_last_7_days_xpath))).click()
     
@@ -277,10 +293,10 @@ try:
     datatable[charged_event_name] = charged_event_count
     
     gc = gspread.service_account(filename=os.getcwd() + "/automation-1608644218205-e292924471e1.json")
-    sheet = gc.open_by_key("1lQN9ZKsn1Pa1VH_TCf21ie_GK4zHTc18sPvgG2zkbIM")
+    sheet = gc.open_by_key(sheet_id)
     worksheet_found = False
     acc_worksheet = sheet.get_worksheet(0)
-    print("Adding data into Google Sheet")
+    print("Adding data into Google Sheet with id: " + sheet_id)
 
     for worksheet in sheet.worksheets():
         if worksheet.title == account_id:
@@ -301,5 +317,8 @@ try:
             acc_worksheet.update_cell(2, index, datatable[key])
             index += 1
     print ("1 row successfully inserted")
+except: 
+    print("Something went wrong")
+    input("Press any key to continue")
 finally:
     driver.quit()
