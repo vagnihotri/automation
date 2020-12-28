@@ -1,6 +1,7 @@
 # Script to fetch Key Account Metrics
 
-This Python script uses Selenium to automate querying Account Metrics from the CleverTap dashboard. It queries the following metrics from the account sequentially and then sends it to a Google Sheet -
+This Python script uses Selenium to automate querying Account Metrics from the CleverTap dashboard **for the past 7 days**.
+It queries the following account metrics from the past 7 days sequentially and then sends it to a Google Sheet -
 1. Size of All Users Segment
 2. Reachability of All Users Segment on Web Push, Email, Push, SMS, Whatsapp, and Audiences channels
 3. Blacklisting Profile count (Identity Set -> Dropped History -> true)
