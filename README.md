@@ -15,8 +15,8 @@ It queries the following account metrics from the past 7 days sequentially and t
 
 # Sample Usage 
 (After installing pip3, selenium and gspread) -
-`python3 script.py -a 989-WZK-K45Z -r eu -e 'Subscribed'`
-where a 12 character Account Id, Account Region and Key Event are passed as arguments (-a, -r and -e respectively). 
+`python3 script.py -a 989-WZK-K45Z -r eu -e 'Subscribed' -s <Google Spreadsheet ID>`
+where a 12 character Account Id, Account Region, Key Event and Google Spreadsheet ID are passed as arguments (-a, -r, -e, -s respectively). 
 If Key Event entered isn't found, Charged is used by default
 
 # Requirements:
