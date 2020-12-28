@@ -14,12 +14,13 @@ It queries the following account metrics from the past 7 days sequentially and t
 10. Key Account Event Count (Typically the conversion event for the account for example, Charged.)
 
 # Usage 
-Please exit Google Chrome Browser<br><br>
+Get the automation json from the TAM slack channel, put it in the same directory as the kam_script executable/script.py and chromedriver executable <br>
+
 **Using source code** <br>
 (After installing pip3, selenium and gspread) - <br>
 `python3 script.py -a 989-WZK-K45Z -r eu -e 'Subscribed' -s <Google Spreadsheet ID>`<br><br>
 **Using the bundled executable (Mac OS only)** <br>
-(Make sure the kam_script and chromedriver executables are in the same directory) <br>
+
 `./kam_script -a 989-WZK-K45Z -r eu -e 'Subscribed' -s <Google Spreadsheet ID>` <br>
 If Mac OS blocks it, please follow the steps mentioned [here](https://support.apple.com/en-in/HT202491) <br><br>
 Where a 12 character Account Id, Account Region, Key Event and Google Spreadsheet ID are passed as arguments (-a, -r, -e, -s respectively). 
