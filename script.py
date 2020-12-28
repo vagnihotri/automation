@@ -62,11 +62,7 @@ url = base_url + account_id
 
 path = os.getcwd() + "/chromedriver"
 chrome_options = Options()
-usr = os.getcwd().split("/")[2]
-user_data_dir = "."
-if usr != "":
-    user_data_dir = "/Users/" + usr + "/Library/Application Support/Google/Chrome"
-chrome_options.add_argument("user-data-dir=" + user_data_dir)
+chrome_options.add_argument("user-data-dir=" + os.getcwd()+"/googlefiles")
 driver=webdriver.Chrome(executable_path=path, options=chrome_options)
 
 driver.maximize_window()
@@ -318,7 +314,7 @@ try:
             index += 1
     print ("1 row successfully inserted")
 except: 
-    print("Something went wrong")
-    input("Press any key to continue")
+    print("Something went wrong. Please log and contact the dev")
+    input("Press enter to continue")
 finally:
     driver.quit()
