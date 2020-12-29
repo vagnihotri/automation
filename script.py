@@ -142,8 +142,10 @@ try:
     event_select_xpath = "/html/body/div[6]/div[3]/div/div/div[5]/div[1]/div[1]/div[2]/div[2]/div/div[1]/div[4]/ul/li/div[2]/div/div/div[1]/div[1]/div/div/a/div"
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, event_select_xpath))).click()
     time.sleep(3)
-    id_error_event_xpath = "/html/body/div[6]/div[3]/div/div/div[5]/div[1]/div[1]/div[2]/div[2]/div/div[1]/div[4]/ul/li/div[2]/div/div/div[1]/div[1]/div/div/div/ul/li[13]"
-    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, id_error_event_xpath))).click()
+    for element in driver.find_elements_by_tag_name("li"):
+        if element.text == "Identity Error" and element.is_displayed():
+            element.click()
+            break
 
     view_details_xpath = "/html/body/div[6]/div[3]/div/div/div[5]/div[1]/div[2]/input"
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, view_details_xpath))).click()
@@ -156,8 +158,10 @@ try:
     event_select_xpath = "/html/body/div[6]/div[3]/div/div/div[5]/div[1]/div[1]/div[2]/div[2]/div/div[1]/div[4]/ul/li/div[2]/div/div/div[1]/div[1]/div/div/a/div"
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, event_select_xpath))).click()
     time.sleep(3)
-    id_set_event_xpath = "/html/body/div[6]/div[3]/div/div/div[5]/div[1]/div[1]/div[2]/div[2]/div/div[1]/div[4]/ul/li/div[2]/div/div/div[1]/div[1]/div/div/div/ul/li[15]"
-    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, id_set_event_xpath))).click()
+    for element in driver.find_elements_by_tag_name("li"):
+        if element.text == "Identity Set" and element.is_displayed():
+            element.click()
+            break
 
     filter_by_elem_xpath = "/html/body/div[6]/div[3]/div/div/div[5]/div[1]/div[1]/div[2]/div[2]/div/div[1]/div[4]/ul/li/div[2]/div/div/div[2]/a"
     driver.find_element_by_xpath(filter_by_elem_xpath).click()
