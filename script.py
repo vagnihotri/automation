@@ -5,71 +5,17 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
+from sentry_sdk import capture_exception
 import time
 import sys
 import os
 import datetime
 import gspread   
 import json
+import sentry_sdk
 
-regions = ["eu","in","sg","us","sk"]
-account_id = ""
-region = ""
-charged_event_name = ""
-sheet_id = ""
-
-if len(sys.argv) != 9:
-    sys.exit("Arguments Entry Invalid. Sample usage: python3 simple.py -a ZWW-WWW-WWWZ -r eu -e 'ABC CDF' -s <Google Spreadsheet ID>")
-
-arg_index = 0
-account_id_found = False
-region_found = False
-special_event_found = False
-sheet_id_found = False
-while arg_index < len(sys.argv):
-    if sys.argv[arg_index] == "-a" and (arg_index+1) != len(sys.argv):
-        account_id = sys.argv[arg_index+1]
-        account_id_found = True
-    if sys.argv[arg_index] == "-r" and (arg_index+1) != len(sys.argv):
-        region = sys.argv[arg_index+1]
-        region_found = True
-    if sys.argv[arg_index] == "-e" and (arg_index+1) != len(sys.argv):
-        charged_event_name = sys.argv[arg_index+1]
-        special_event_found = True
-    if sys.argv[arg_index] == "-s" and (arg_index+1) != len(sys.argv):
-        sheet_id = sys.argv[arg_index+1]
-        sheet_id_found = True
-    arg_index += 1
-
-if(account_id_found == False or region_found == False or special_event_found == False or sheet_id_found == False):
-    sys.exit("Arguments Entry Invalid. Sample usage: python3 simple.py -a ZWW-WWW-WWWZ -r eu -e 'ABC CDF' -s <Google Spreadsheet ID>")
-
-if len(account_id) != 12 or account_id[3] != '-' or account_id[7] != '-' :
-    sys.exit("Invalid Account Id Entered")
-if region not in regions :
-    sys.exit("Invalid Region Entered")
-if region == "eu":
-    demo_acc_id = "ZWW-WWW-WWWZ"
-elif region == "in":
-    demo_acc_id = "ZWW-WWW-WW4Z"
-else:
-    demo_acc_id = input("Enter 12 Character Bearded Robot Account ID for " + region + " region: ")
-    if len(demo_acc_id) != 12 or demo_acc_id[3] != '-' or demo_acc_id[7] != '-' :
-        sys.exit("Invalid Bearded Robot Account Id Entered")
-region = region + "1"
-base_url = "https://" + region + ".dashboard.clevertap.com/"+ demo_acc_id +"/account/internal/access.html?tempAccountId="
-url = base_url + account_id
-
-path = os.getcwd() + "/chromedriver"
-chrome_options = Options()
-chrome_options.add_argument("user-data-dir=" + os.getcwd()+"/googlefiles")
-driver=webdriver.Chrome(executable_path=path, options=chrome_options)
-
-driver.maximize_window()
-
-driver.get(url)
-
-try:
+def fetch_kam(driver, url, account_id, region, sheet_id, charged_event_name):
+    driver.get(url)
     element = WebDriverWait(driver, 120).until(
         EC.title_contains('Access')
     )
@@ -317,8 +263,73 @@ try:
             acc_worksheet.update_cell(2, index, datatable[key])
             index += 1
     print ("1 row successfully inserted")
-except: 
-    print("Something went wrong. Please log and contact the dev")
-    input("Press enter to continue")
+
+sentry_sdk.init(
+    "https://85e06cac8eec4b63a2d032e755fcc948@o498378.ingest.sentry.io/5575833",
+    traces_sample_rate=1.0
+)
+regions = ["eu","in","sg","us","sk"]
+account_id = ""
+region = ""
+charged_event_name = ""
+sheet_id = ""
+
+if len(sys.argv) != 9:
+    sys.exit("Arguments Entry Invalid. Sample usage: python3 simple.py -a ZWW-WWW-WWWZ -r eu -e 'ABC CDF' -s <Google Spreadsheet ID>")
+
+arg_index = 0
+account_id_found = False
+region_found = False
+special_event_found = False
+sheet_id_found = False
+while arg_index < len(sys.argv):
+    if sys.argv[arg_index] == "-a" and (arg_index+1) != len(sys.argv):
+        account_id = sys.argv[arg_index+1]
+        account_id_found = True
+    if sys.argv[arg_index] == "-r" and (arg_index+1) != len(sys.argv):
+        region = sys.argv[arg_index+1]
+        region_found = True
+    if sys.argv[arg_index] == "-e" and (arg_index+1) != len(sys.argv):
+        charged_event_name = sys.argv[arg_index+1]
+        special_event_found = True
+    if sys.argv[arg_index] == "-s" and (arg_index+1) != len(sys.argv):
+        sheet_id = sys.argv[arg_index+1]
+        sheet_id_found = True
+    arg_index += 1
+
+if(account_id_found == False or region_found == False or special_event_found == False or sheet_id_found == False):
+    sys.exit("Arguments Entry Invalid. Sample usage: python3 simple.py -a ZWW-WWW-WWWZ -r eu -e 'ABC CDF' -s <Google Spreadsheet ID>")
+
+if len(account_id) != 12 or account_id[3] != '-' or account_id[7] != '-' :
+    sys.exit("Invalid Account Id Entered")
+if region not in regions :
+    sys.exit("Invalid Region Entered")
+if region == "eu":
+    demo_acc_id = "ZWW-WWW-WWWZ"
+elif region == "in":
+    demo_acc_id = "ZWW-WWW-WW4Z"
+else:
+    demo_acc_id = input("Enter 12 Character Bearded Robot Account ID for " + region + " region: ")
+    if len(demo_acc_id) != 12 or demo_acc_id[3] != '-' or demo_acc_id[7] != '-' :
+        sys.exit("Invalid Bearded Robot Account Id Entered")
+region = region + "1"
+base_url = "https://" + region + ".dashboard.clevertap.com/"+ demo_acc_id +"/account/internal/access.html?tempAccountId="
+url = base_url + account_id
+
+path = os.getcwd() + "/chromedriver"
+chrome_options = Options()
+chrome_options.add_argument("user-data-dir=" + os.getcwd()+"/googlefiles")
+driver=webdriver.Chrome(executable_path=path, options=chrome_options)
+
+driver.maximize_window()
+
+try:
+    fetch_kam(driver, url, account_id, region, sheet_id, charged_event_name)
+except Exception as exc: 
+    print("Something went wrong. Logging and contacting the dev")
+    capture_exception(exc)
+    ip = input("Press y to retry: ")
+    if ip == 'y' or ip == 'Y':
+        fetch_kam(driver, url, account_id, region, sheet_id, charged_event_name)
 finally:
     driver.quit()
